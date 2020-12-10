@@ -1,6 +1,10 @@
-import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * @author dogukan.yildirim
+ * @apiNote X firması için 36 aylık borç verecek bir borç hesaplama sistemi uygulaması
+ */
 public class QuestionThreeSolution {
 
     public static void main(String[] args) {
@@ -11,47 +15,14 @@ public class QuestionThreeSolution {
             System.err.println("Lutfen borc miktari girişi yapiniz!");
             System.exit(1);
         }
+        String marketFile = args[0];
+        Integer debtValue = Integer.parseInt(args[1]);
 
-        String marketDosyasi = args[0];
-        String borcMiktari = args[1];
-
-        System.out.println("Market dosyasi: " + marketDosyasi);
-        System.out.println("Borc miktari: " + borcMiktari + "TL");
-
-        Map<String, List<String>> fileContentMap = new HashMap<>();
-
-        File csvFile = new File(marketDosyasi);
-        if (csvFile.isFile()) {
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(csvFile));
-                bufferedReader.readLine(); //For skip first line
-                String row;
-                while (Objects.nonNull(row = bufferedReader.readLine())) {
-                    String[] columns = row.split(",");
-                    fileContentMap.put(columns[0], Arrays.asList(Arrays.copyOfRange(columns, 1, 3)));
-                }
-                fileContentMap.entrySet().forEach(System.out::println);
-
-                int debtCapacity = fileContentMap.values().stream().map(strings -> strings.get(1)).mapToInt(Integer::valueOf).sum();
-                System.out.println(debtCapacity);
-
-                if (debtCapacity < Integer.parseInt(borcMiktari)) {
-                    System.err.println("Girilen miktara uygun bir borc bulunamadi!");
-                }
-
-                //TODO 10a bölünebilme kuralı ile borç artırımını kontrol et 1000 ve 15000 sınırı koy
-                //TODO 36 aya dikkat
-                //TODO algoritma en küçük faiz oranından başlamalı, sonuç borç alınan birimlerin faizlerinin ortalaması ile hesaplanmalı
-
-            } catch (FileNotFoundException e) {
-                System.err.println("Dosya bulunamadi!");
-                System.exit(1);
-            } catch (IOException e) {
-                System.err.println("Dosya okunurken bir hata olustu!");
-                System.exit(1);
-            }
-        }
-
+        DebtSystem debtSystem = new DebtSystem();
+        debtSystem.debtValueValidation(debtValue);
+        Map<String, List<String>> fileContentMap = debtSystem.getFileToMap(marketFile, debtValue);
+        debtSystem.calculateRateAndTotalDebt(fileContentMap, debtValue);
     }
+
 
 }
