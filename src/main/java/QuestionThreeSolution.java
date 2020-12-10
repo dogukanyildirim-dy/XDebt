@@ -39,6 +39,9 @@ public class QuestionThreeSolution {
                     System.err.println("Girilen miktara uygun bir borc bulunamadi!");
                 }
 
+                //TODO 10a bölünebilme kuralı ile borç artırımını kontrol et 1000 ve 15000 sınırı koy
+                //TODO 36 aya dikkat
+                //TODO algoritma en küçük faiz oranından başlamalı, sonuç borç alınan birimlerin faizlerinin ortalaması ile hesaplanmalı
 
             } catch (FileNotFoundException e) {
                 System.err.println("Dosya bulunamadi!");
